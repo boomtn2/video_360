@@ -108,7 +108,18 @@ extension Video360View {
                 }
                 let point = CGPoint(x: x, y: y)
                 self.swifty360View.cameraController.handlePan(isStart: isStart, point: point)
+            case "scrollCamera":
+                        guard let argMaps = call.arguments as? Dictionary<String, Any>,
 
+                              let x = argMaps["x"] as? Double,
+                              (0 ... Double(self.swifty360View.frame.maxX)) ~= x,
+                              let y = argMaps["y"] as? Double,
+                              (0 ... Double(self.swifty360View.frame.maxY)) ~= y else {
+                            result(FlutterError(code: call.method, message: "Missing argument", details: nil))
+                            return
+                        }
+                        let point = CGPoint(x: x, y: y)
+                        self.swifty360View.cameraController.scrollCamera(x: point.x, y: point.y)
             case "currentPosition":
                 let position = self.player?.currentItem?.currentTime() ?? .zero
                 result(Int(CMTimeGetSeconds(position) * 1000))

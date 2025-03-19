@@ -221,6 +221,34 @@ open class Swifty360CameraController: NSObject, UIGestureRecognizerDelegate {
         }
     }
 
+       @objc open func scrollCamera(x: CGFloat, y: CGFloat) {
+           guard let point = currentPosition else { return }
+
+           var newX = point.x + x
+           var newY = point.y + y
+
+           // Nếu giá trị vượt quá 360 hoặc nhỏ hơn 0, đưa về 0
+           if abs(newX) >= 360 {
+               newX = newX - 360
+           }
+           if abs(newY) >= 360 {
+               newY = newY - 360
+           }
+
+           let newPoint = CGPoint(x: newX, y: newY)
+           let rotateDelta = subtractPoints(a: point, b: newPoint)
+
+           let result = Swifty360PanGestureChangeCalculation(position: point,
+                                                             rotateDelta: rotateDelta,
+                                                             viewSize: view.bounds.size,
+                                                             allowedPanningAxes: allowedPanGesturePanningAxes)
+           currentPosition = result.position
+           pointOfView.eulerAngles = result.eulerAngles
+           compassAngleUpdateBlock?(compassAngle())
+           reportInitialCameraMovementIfNeeded(withMethod: .touch)
+       }
+
+
 
     /**
      Updates the camera angle based on the current device motion. It's assumed that this method will be called

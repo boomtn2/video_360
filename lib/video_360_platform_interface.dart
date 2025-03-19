@@ -56,6 +56,10 @@ abstract class Video360Platform extends PlatformInterface {
     throw UnimplementedError('onPanUpdate() has not been implemented.');
   }
 
+  Future<void> scrollCamera(int viewId, bool isStart, double x, double y) async {
+    throw UnimplementedError('onPanUpdate() has not been implemented.');
+  }
+
   Future<bool> isPlaying(int viewId) async {
     throw UnimplementedError('isPlaying() has not been implemented.');
   }

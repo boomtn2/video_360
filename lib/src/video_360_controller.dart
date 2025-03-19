@@ -86,4 +86,8 @@ class Video360Controller {
   Future<int> getDuration() async {
     return await Video360Platform.instance.getDuration(id);
   }
+
+  Future<void> scrollCamera(bool isStart, double x, double y) async {
+    await Video360Platform.instance.scrollCamera(id, isStart, x, y);
+  }
 }

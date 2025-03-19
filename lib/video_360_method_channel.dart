@@ -89,6 +89,23 @@ class MethodChannelVideo360 extends Video360Platform {
     }
   }
 
+
+  @override
+  Future<void> scrollCamera(int viewId, bool isStart, double x, double y) async {
+    if (Platform.isIOS) {
+      try {
+        var methodChannel = MethodChannel('${channelPrefix}_$viewId');
+        await methodChannel.invokeMethod<void>('scrollCamera', {
+          'isStart': isStart,
+          'x': x,
+          'y': y,
+        });
+      } on PlatformException catch (e) {
+        debugPrint('${e.code}: ${e.message}');
+      }
+    }
+  }
+
   @override
   Future<void> onPanUpdate(int viewId, bool isStart, double x, double y) async {
     if (Platform.isIOS) {
@@ -137,4 +154,6 @@ class MethodChannelVideo360 extends Video360Platform {
       return 0;
     }
   }
+
+
 }
