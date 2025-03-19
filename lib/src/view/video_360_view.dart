@@ -93,8 +93,7 @@ class _Video360ViewState extends State<Video360View>
   }
 
   Widget _createAndroidView() {
-    return widget.useAndroidViewSurface == true
-        ? PlatformViewLink(
+    return  PlatformViewLink(
             viewType: viewName,
             surfaceFactory: (
               BuildContext context,
@@ -125,10 +124,7 @@ class _Video360ViewState extends State<Video360View>
 
               return controller;
             },
-          )
-        : Video360AndroidView(
-            viewType: viewName,
-            onPlatformViewCreated: _onPlatformViewCreated,
           );
+
   }
 }
