@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:video_360/video_360.dart';
 
@@ -28,6 +29,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +45,7 @@ class _MyAppState extends State<MyApp> {
               height: MediaQuery.of(context).size.height,
               child: Video360View(
                 url:
-                    'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8',
-                onVideo360ViewCreated: _onVideo360ViewCreated,
+              'https://video3.mobion.vn/uploads/2025/03/13/1741860442226/7d502bd003d5_abr.m3u8' ,               onVideo360ViewCreated: _onVideo360ViewCreated,
                 onPlayInfo: (Video360PlayInfo info) {
                   setState(() {
                     durationText = info.duration.toString();
@@ -113,6 +115,24 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                 ],
+              ),
+              Row(
+                children:[
+                  MaterialButton(
+                    onPressed: () {
+                      controller?.scrollCamera(false, 0,30);
+                    },
+                    color: Colors.grey[100],
+                    child: const Text('>>'),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      fakeSwipe(context);                    },
+                    color: Colors.grey[100],
+                    child: const Text('<<'),
+                  ),
+
+                ]
               )
             ],
           )
@@ -121,6 +141,29 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  double x = 10;
+  double y = 20;
+
+  // void rolationCamera(){
+  //   setState(){
+  //     x +=10;
+  //     y +=20;
+  //   }
+  //
+  // }
+  void fakeSwipe(BuildContext context, {double dx = -100, double dy = 0}) {
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final Offset start = box.localToGlobal(Offset(box.size.width / 2, box.size.height / 2));
+    final Offset end = start.translate(dx, dy);
+
+    final PointerEvent down = PointerDownEvent(position: start);
+    final PointerEvent move = PointerMoveEvent(position: end);
+    final PointerEvent up = PointerUpEvent(position: end);
+
+    GestureBinding.instance.handlePointerEvent(down);
+    GestureBinding.instance.handlePointerEvent(move);
+    GestureBinding.instance.handlePointerEvent(up);
+  }
   void _onVideo360ViewCreated(Video360Controller controller) {
     this.controller = controller;
     this.controller?.play();

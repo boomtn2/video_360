@@ -9,5 +9,6 @@ class Video360AndroidView extends AndroidView {
   }) : super(
           creationParams: <String, dynamic>{},
           creationParamsCodec: const StandardMessageCodec(),
-        );
+          layoutDirection: TextDirection.ltr,
+  );
 }

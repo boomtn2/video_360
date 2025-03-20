@@ -1,4 +1,4 @@
-package com.kino.video_360.player
+ package com.kino.video_360.player
 
 import android.app.Activity
 import android.content.Context
@@ -7,9 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
@@ -27,6 +29,7 @@ import androidx.media3.exoplayer.video.spherical.SphericalGLSurfaceView
 import androidx.media3.ui.PlayerView
 import com.kino.video_360.R
 
+ @UnstableApi
 class VRActivity : Activity(), Player.Listener {
 
     private lateinit var vrPlayer: PlayerView
@@ -35,7 +38,7 @@ class VRActivity : Activity(), Player.Listener {
 
     private lateinit var bandwidthMeter: DefaultBandwidthMeter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @OptIn(UnstableApi::class) override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
