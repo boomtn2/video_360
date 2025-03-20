@@ -52,38 +52,32 @@ class _Video360ViewState extends State<Video360View>
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return _createAndroidView();
+      return GestureDetector(
+          onTap: (){
+            if (widget.actionTap != null) widget.actionTap!();
+          },
+          child: _createAndroidView());
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return Video360IOSView(
-        viewType: viewName,
-        onPlatformViewCreated: _onPlatformViewCreated,
+      return GestureDetector(
+        child: AbsorbPointer(
+          absorbing: true,
+          child: Video360IOSView(
+            viewType: viewName,
+            onPlatformViewCreated: _onPlatformViewCreated,
+          ),
+        ),
+        onTap: () {
+          if (widget.actionTap != null) widget.actionTap!();
+        },
+        onPanStart: (details) {
+          controller.onPanUpdate(
+              true, details.localPosition.dx, details.localPosition.dy);
+        },
+        onPanUpdate: (details) {
+          controller.onPanUpdate(
+              false, details.localPosition.dx, details.localPosition.dy);
+        },
       );
-      // return RawGestureDetector(
-      //   gestures: {
-      //     TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-      //           () => TapGestureRecognizer(),
-      //           (TapGestureRecognizer instance) {
-      //         instance.onTap = () {
-      //           if (widget.actionTap != null) widget.actionTap!();
-      //         };
-      //       },
-      //     ),
-      //   },
-      //   child: GestureDetector(
-      //     child:
-      //     // onTap: () {
-      //     //   if (widget.actionTap != null) widget.actionTap!();
-      //     // },
-      //     onPanStart: (details) {
-      //       controller.onPanUpdate(
-      //           true, details.localPosition.dx, details.localPosition.dy);
-      //     },
-      //     onPanUpdate: (details) {
-      //       controller.onPanUpdate(
-      //           false, details.localPosition.dx, details.localPosition.dy);
-      //     },
-      //   ),
-      // );
     }
     return Center(
       child: Text(
