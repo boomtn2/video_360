@@ -52,41 +52,38 @@ class _Video360ViewState extends State<Video360View>
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return GestureDetector(
-          onTap: () {
-            if (widget.actionTap != null) widget.actionTap!();
-          },
-          child: _createAndroidView());
+      return _createAndroidView();
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return RawGestureDetector(
-        gestures: {
-          TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-                () => TapGestureRecognizer(),
-                (TapGestureRecognizer instance) {
-              instance.onTap = () {
-                if (widget.actionTap != null) widget.actionTap!();
-              };
-            },
-          ),
-        },
-        child: GestureDetector(
-          child: Video360IOSView(
-            viewType: viewName,
-            onPlatformViewCreated: _onPlatformViewCreated,
-          ),
-          // onTap: () {
-          //   if (widget.actionTap != null) widget.actionTap!();
-          // },
-          onPanStart: (details) {
-            controller.onPanUpdate(
-                true, details.localPosition.dx, details.localPosition.dy);
-          },
-          onPanUpdate: (details) {
-            controller.onPanUpdate(
-                false, details.localPosition.dx, details.localPosition.dy);
-          },
-        ),
+      return Video360IOSView(
+        viewType: viewName,
+        onPlatformViewCreated: _onPlatformViewCreated,
       );
+      // return RawGestureDetector(
+      //   gestures: {
+      //     TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+      //           () => TapGestureRecognizer(),
+      //           (TapGestureRecognizer instance) {
+      //         instance.onTap = () {
+      //           if (widget.actionTap != null) widget.actionTap!();
+      //         };
+      //       },
+      //     ),
+      //   },
+      //   child: GestureDetector(
+      //     child:
+      //     // onTap: () {
+      //     //   if (widget.actionTap != null) widget.actionTap!();
+      //     // },
+      //     onPanStart: (details) {
+      //       controller.onPanUpdate(
+      //           true, details.localPosition.dx, details.localPosition.dy);
+      //     },
+      //     onPanUpdate: (details) {
+      //       controller.onPanUpdate(
+      //           false, details.localPosition.dx, details.localPosition.dy);
+      //     },
+      //   ),
+      // );
     }
     return Center(
       child: Text(
