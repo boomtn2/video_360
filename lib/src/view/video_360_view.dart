@@ -11,20 +11,22 @@ typedef Video360ViewCreatedCallback = void Function(
     Video360Controller controller);
 
 class Video360View extends StatefulWidget {
-  const Video360View({
-    Key? key,
-    required this.onVideo360ViewCreated,
-    this.url,
-    this.isRepeat = false,
-    this.useAndroidViewSurface = false,
-    this.onPlayInfo,
-  }) : super(key: key);
+  const Video360View(
+      {Key? key,
+      required this.onVideo360ViewCreated,
+      this.url,
+      this.isRepeat = false,
+      this.useAndroidViewSurface = false,
+      this.onPlayInfo,
+      this.actionTap})
+      : super(key: key);
 
   final Video360ViewCreatedCallback onVideo360ViewCreated;
   final String? url;
   final bool? isRepeat;
   final bool? useAndroidViewSurface;
   final Video360ControllerPlayInfo? onPlayInfo;
+  final Function? actionTap;
 
   @override
   State<Video360View> createState() => _Video360ViewState();
@@ -50,13 +52,20 @@ class _Video360ViewState extends State<Video360View>
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return _createAndroidView();
+      return GestureDetector(
+          onTap: () {
+            if (widget.actionTap != null) widget.actionTap!();
+          },
+          child: _createAndroidView());
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return GestureDetector(
         child: Video360IOSView(
           viewType: viewName,
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
+        onTap: () {
+          if (widget.actionTap != null) widget.actionTap!();
+        },
         onPanStart: (details) {
           controller.onPanUpdate(
               true, details.localPosition.dx, details.localPosition.dy);
@@ -93,38 +102,36 @@ class _Video360ViewState extends State<Video360View>
   }
 
   Widget _createAndroidView() {
-    return  PlatformViewLink(
-            viewType: viewName,
-            surfaceFactory: (
-              BuildContext context,
-              PlatformViewController controller,
-            ) {
-              return AndroidViewSurface(
-                controller: controller as AndroidViewController,
-                gestureRecognizers: const <Factory<
-                    OneSequenceGestureRecognizer>>{},
-                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-              );
-            },
-            onCreatePlatformView: (PlatformViewCreationParams params) {
-              final ExpensiveAndroidViewController controller =
-                  PlatformViewsService.initExpensiveAndroidView(
-                id: params.id,
-                viewType: viewName,
-                layoutDirection: TextDirection.ltr,
-                // creationParams: creationParams,
-                creationParams: <String, dynamic>{},
-                creationParamsCodec: const StandardMessageCodec(),
-                onFocus: () => params.onFocusChanged(true),
-              );
-              controller
-                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-                ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
-                ..create();
+    return PlatformViewLink(
+      viewType: viewName,
+      surfaceFactory: (
+        BuildContext context,
+        PlatformViewController controller,
+      ) {
+        return AndroidViewSurface(
+          controller: controller as AndroidViewController,
+          gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+        );
+      },
+      onCreatePlatformView: (PlatformViewCreationParams params) {
+        final ExpensiveAndroidViewController controller =
+            PlatformViewsService.initExpensiveAndroidView(
+          id: params.id,
+          viewType: viewName,
+          layoutDirection: TextDirection.ltr,
+          // creationParams: creationParams,
+          creationParams: <String, dynamic>{},
+          creationParamsCodec: const StandardMessageCodec(),
+          onFocus: () => params.onFocusChanged(true),
+        );
+        controller
+          ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+          ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
+          ..create();
 
-              return controller;
-            },
-          );
-
+        return controller;
+      },
+    );
   }
 }
