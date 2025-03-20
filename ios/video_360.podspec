@@ -15,7 +15,7 @@ video 360 player
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '11.0'
+  s.platform = :ios, '12.0'
   s.resource_bundles = {
     'video_360' => ['ios/Classes/Swifty360Player/Swifty360Player/Swifty360Player-Info.plist']
   }
